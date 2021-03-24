@@ -2,8 +2,11 @@ package net.ivanvega.regresoacasaoswame;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,7 +40,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -50,19 +52,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
-    @Override
-    public void onIndoorBuildingFocused() {
-        Toast.makeText(MapsActivity.this,
-                "onIndoorBuildingFocused: " + mMap.getFocusedBuilding().getActiveLevelIndex(), Toast.LENGTH_SHORT).show();
-    }
+        mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
+            @Override
+            public void onIndoorBuildingFocused() {
+                Toast.makeText(MapsActivity.this,
+                        "onIndoorBuildingFocused: " + mMap.getFocusedBuilding().getActiveLevelIndex(), Toast.LENGTH_SHORT).show();
+            }
 
-    @Override
-    public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
-        Toast.makeText(MapsActivity.this,
-                "onIndoorLevelActivated: " + indoorBuilding.getActiveLevelIndex(), Toast.LENGTH_SHORT).show();
-    }
-});
+            @Override
+            public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
+                Toast.makeText(MapsActivity.this,
+                        "onIndoorLevelActivated: " + indoorBuilding.getActiveLevelIndex(), Toast.LENGTH_SHORT).show();
+            }
+        });
         LatLng angelInd = new LatLng(41.8785774, -87.6356801);
 
 
@@ -75,7 +77,7 @@ mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() 
         CameraUpdate campos = CameraUpdateFactory.newCameraPosition(position);
         mMap.animateCamera(campos);
 
-                                        mMap.addMarker(new MarkerOptions().position(angelInd).title("Torre Willis"));
+        mMap.addMarker(new MarkerOptions().position(angelInd).title("Torre Willis"));
 
     }
 
@@ -110,7 +112,7 @@ mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() 
 
         }
         if (item.getItemId() == R.id.MyLocation) {
-          miUbicacion();
+            miUbicacion();
         }
         if (item.getItemId() == R.id.Polilinear) {
             startActivity(new Intent(getApplicationContext(), MapsActivityPolilineasMarcadores.class));
@@ -121,25 +123,25 @@ mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() 
         if (item.getItemId() == R.id.Traffic) {
             //mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
-            item.setChecked(!item.isChecked() ) ;
+            item.setChecked(!item.isChecked());
             mMap.setTrafficEnabled(item.isChecked());
             Toast.makeText(this, "" + String.valueOf(item.isChecked()), Toast.LENGTH_SHORT).show();
         }
         if (item.getItemId() == R.id.MyLocation) {
             //mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-            item.setChecked(!item.isChecked() ) ;
+            item.setChecked(!item.isChecked());
             Toast.makeText(this, "" + String.valueOf(item.isChecked()), Toast.LENGTH_SHORT).show();
         }
         if (item.getItemId() == R.id.Buildings) {
             //mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-            item.setChecked(!item.isChecked() ) ;
+            item.setChecked(!item.isChecked());
             mMap.getUiSettings().setIndoorLevelPickerEnabled(false);
             Toast.makeText(this, "" + String.valueOf(item.isChecked()), Toast.LENGTH_SHORT).show();
         }
         if (item.getItemId() == R.id.indoor) {
             //mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
-            item.setChecked(!item.isChecked() ) ;
+            item.setChecked(!item.isChecked());
             mMap.setIndoorEnabled(item.isChecked());
             Toast.makeText(this, "" + String.valueOf(item.isChecked()), Toast.LENGTH_SHORT).show();
         }
@@ -152,6 +154,16 @@ mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() 
 
     private void miUbicacion() {
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
@@ -161,9 +173,9 @@ mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() 
                             // Logic to handle location object
                             Toast.makeText(MapsActivity.this,
                                     "Mi última unicación conocisa es Latitud: "
-                                            + String.valueOf( location.getLatitude()) +
+                                            + String.valueOf(location.getLatitude()) +
                                             ", Longitud: " + location.getLongitude()
-                                    ,Toast.LENGTH_LONG).show();
+                                    , Toast.LENGTH_LONG).show();
 
                             LatLng ll = new LatLng(location.getLatitude(),
                                     location.getLongitude());
@@ -177,10 +189,10 @@ mMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() 
                                     CameraUpdateFactory.newLatLngZoom(ll, 15)
                             );
 
-                        }else{
+                        } else {
                             Toast.makeText(MapsActivity.this,
                                     "Niguas de ubicación "
-                                    ,Toast.LENGTH_LONG).show();
+                                    , Toast.LENGTH_LONG).show();
                         }
                     }
                 });

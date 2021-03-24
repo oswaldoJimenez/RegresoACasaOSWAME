@@ -57,7 +57,6 @@ public class MapasFragment extends Fragment implements OnMapReadyCallback, Googl
     private String mParam2;
 
 
-
     public MapasFragment() {
         // Required empty public constructor
     }
